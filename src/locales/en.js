@@ -229,7 +229,9 @@ export default {
             'Please make sure to keep an updated antivirus and operating system.',
             'Please keep your private keys PRIVATE, do not give them to anyone.',
             'If you use Restore from Mnemonic, the seed words and password must be exactly right or the wallet will create a new address. When using Restore from Mnemonic, confirm you have the correct address.',
-        ]
+        ],
+        successfull_send_you_can_view_tx: 'Successfully sent. You can view the details of the transaction at: <a href="{n}" target="_blank">{n}</a>',
+        send_failed: 'An error occured: {n}',
     },
     delegation: {
         title: 'Offline Staking',
