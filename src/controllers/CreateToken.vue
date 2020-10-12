@@ -82,7 +82,7 @@ export default {
     return {
       name: '',
       symbol: '',
-      decimal: '8',
+      decimal: '7',
       totalSupply: '',
       gasPrice: '40',
       gasLimit: '2500000',
