@@ -174,7 +174,7 @@
         addTokenName: '',
         addTokenSymbol: '',
         addTokenAddress: '',
-        addTokenDecimals: 8,
+        addTokenDecimals: 7,
         gasPrice: '40',
         gasLimit: '250000',
         fee: '0.01',
