@@ -6955,6 +6955,11 @@ p {
     user-select: none
 }
 
+#myguid {
+    border-radius: 0px !important;
+    background-color: #343c42;
+}
+
 .btn__content:before {
     border-radius: inherit;
     color: inherit;

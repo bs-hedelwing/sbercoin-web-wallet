@@ -26,6 +26,21 @@
             </v-list-tile-content>
           </v-list-tile>
         </template>
+        <template>
+            <v-btn id="myguid" color="#3a434a" block href="https://explorer.sbercoin.com/" target="_blank">
+              Sbercoin Explorer
+            </v-btn>
+          </template>
+          <template>
+            <v-btn id="myguid" block href="https://ide.sbercoin.com/" target="_blank">
+              Sbercoin IDE
+            </v-btn>
+          </template>
+          <template>
+            <v-btn id="myguid" block href="https://explorer.sbercoin.com/" target="_blank">
+              Sbercoin что-нибудь ещё
+            </v-btn>
+        </template>
         <v-list-tile-action>
           <v-select
             :items="lanSelect"
@@ -316,3 +331,7 @@ export default {
   },
 }
 </script>
+
+.myguid{
+
+}
