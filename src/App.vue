@@ -37,8 +37,8 @@
             </v-btn>
           </template>
           <template>
-            <v-btn id="myguid" block href="https://explorer.sbercoin.com/" target="_blank">
-              Sbercoin что-нибудь ещё
+            <v-btn id="myguid" block href="https://sbercoin.com/" target="_blank">
+              Sbercoin.com
             </v-btn>
         </template>
         <v-list-tile-action>
