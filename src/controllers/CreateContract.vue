@@ -11,7 +11,7 @@
           multiLine
           required
         ></v-text-field>
-        <a href="https://ethereum.github.io/browser-solidity/" target="_blank"
+        <a href="https://ide.sbercoin.com/" target="_blank"
            style="float: right;">{{ $t('create_contract.compiler') }}</a>
         <v-text-field
           v-bind:label="$t('create_contract.gas_price')"
