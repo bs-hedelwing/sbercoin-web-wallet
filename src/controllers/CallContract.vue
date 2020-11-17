@@ -107,10 +107,13 @@ export default {
       try {
         const abiJson = JSON.parse(this.abi)
         this.parsedAbi = []
+	let k = 0
         for (let i = 0; i < abiJson.length; i++) {
           // 过滤 constructor & event
-          if (abiJson[i].type === 'constructor' || abiJson[i].type === 'event') continue
-          this.parsedAbi.push({text: abiJson[i]['name'], value: i, info: abiJson[i]})
+          //if (abiJson[i].type === 'constructor' || abiJson[i].type === 'event') continue
+	  if (abiJson[i]['stateMutability'] !== 'view') continue
+          this.parsedAbi.push({text: abiJson[i]['name'], value: k, info: abiJson[i]})
+	  k++
         }
       } catch (e) {
         this.$root.log.error('call_contract_decode_abi_error', e.stack || e.toString() || e)
