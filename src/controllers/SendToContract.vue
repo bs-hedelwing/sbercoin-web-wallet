@@ -132,14 +132,13 @@ export default {
       try {
         const abiJson = JSON.parse(this.abi)
         this.parsedAbi = []
-	let k = 0;
+	      let k = 0
         for (let i = 0; i < abiJson.length; i++) {
           // 过滤 constructor & event
           //if (abiJson[i].type === 'constructor' || abiJson[i].type === 'event') continue
-	  if (abiJson[i]['type'] === 'constructor' || abiJson[i]['type'] === 'event' || abiJson[i]['type'] === 'fallback' || abiJson[i]['stateMutability'] === 'pure' || abiJson[i]['stateMutability'] === 'view') continue
+	        if (abiJson[i]['type'] === 'constructor' || abiJson[i]['type'] === 'event' || abiJson[i]['type'] === 'fallback' || abiJson[i]['stateMutability'] === 'pure' || abiJson[i]['stateMutability'] === 'view') continue
           this.parsedAbi.push({text: abiJson[i]['name'], value: k, info: abiJson[i]})
-	  k++
-
+	        k++
         }
       } catch (e) {
         this.$root.log.error('send_to_contract_decode_abi_error', e.stack || e.toString() || e)
@@ -148,6 +147,10 @@ export default {
     },
     async send() {
       try {
+        for (let i = 0; i < this.parsedAbi[this.method].info.inputs.length; i++) {
+          if (this.parsedAbi[this.method].info.inputs[i].type === 'address' && this.inputParams[i].substr(0,2) !== '0x')
+            this.inputParams[i] = '0x' + this.inputParams[i]
+        }
         const encodedData = abi.encodeMethod(this.parsedAbi[this.method].info, this.inputParams).substr(2)
         this.confirmSendDialog = true
         try {
