@@ -259,10 +259,11 @@
         this.addTokenLoading = true
         try {
           const tokenInfo = await qrc20.fetchTokenInfo(this.addTokenAddress)
-          this.addTokenName = tokenInfo.name
-          this.addTokenSymbol = tokenInfo.symbol
-          this.addTokenDecimals = tokenInfo.decimals
-          track.trackAction('addToken', 'send', `${this.addTokenAddress}, ${tokenInfo.name}`)
+          console.log(tokenInfo.name)
+          this.addTokenName = tokenInfo.qrc20.name
+          this.addTokenSymbol = tokenInfo.qrc20.symbol
+          this.addTokenDecimals = tokenInfo.qrc20.decimals
+          track.trackAction('addToken', 'send', `${this.addTokenAddress}, ${tokenInfo.qrc20.name}`)
         } catch (e) {
           this.addTokenLoading = false
           if ((e.response && e.response.status === 404) || (e.message === 'this contract is not a qrc20 token')) {
