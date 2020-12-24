@@ -62,5 +62,5 @@ typings/
 .vscode/settings.json
 
 
-dist
+dist/
 .DS_Store
