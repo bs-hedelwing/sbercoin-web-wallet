@@ -124,6 +124,39 @@ class AddressController extends Controller {
     }
   }
 
+  async coinTransactions() {
+    let {ctx} = this
+    let {totalCount, transactions} = await ctx.service.address.getAddressCoinTransactions(ctx.state.address.addressIds)
+    ctx.body = {
+      totalCount,
+      transactions: transactions.map(transaction => ({
+        id: transaction.id.toString('hex'),
+        blockHeight: transaction.blockHeight,
+        blockHash: transaction.blockHash && transaction.blockHash.toString('hex'),
+        inputs: transaction.inputs.map(input => ({
+          prevTxId: input.prevTxId.toString('hex'),
+          outputIndex: input.outputIndex,
+          value: input.value.toString(),
+          address: input.address.toString()
+        })),
+        outputs: transaction.outputs.map(output => ({
+          value: output.value.toString(),
+          address: output.address.toString(),
+          spentTxId: output.spentTxId ? output.spentTxId.toString('hex') : null,
+          spentIndex: output.spentTxId ? output.spentIndex : null
+        })),
+        timestamp: transaction.timestamp,
+        confirmations: transaction.confirmations,
+        amount: transaction.amount.toString(),
+        inputValue: transaction.inputValue.toString(),
+        outputValue: transaction.outputValue.toString(),
+        refundValue: transaction.refundValue.toString(),
+        fees: transaction.fees.toString(),
+        type: transaction.type
+      }))
+    }
+  }
+
   async contractTransactions() {
     let {ctx} = this
     let {address, contract} = ctx.state
