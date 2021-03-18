@@ -7958,12 +7958,18 @@ p {
     transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
     transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), -webkit-box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
 }
-
+#sidebar{
+    position: relative;
+    min-height: 100%;
+    padding: 0 0 100px; 
+}
 #lang {
+    height: unset;
     padding: 25px 15px 10px;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     width: 100%;
+
 }
 
 .input-group label {
@@ -12652,7 +12658,7 @@ table.table tfoot tr {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 0 0 100px;
+    padding: 0;
     pointer-events: auto;
     position: fixed;
     transition: .3s cubic-bezier(.25, .8, .5, 1);
