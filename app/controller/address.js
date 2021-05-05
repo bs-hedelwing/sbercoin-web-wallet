@@ -5,6 +5,7 @@ class AddressController extends Controller {
     let {ctx} = this
     let {address} = ctx.state
     let summary = await ctx.service.address.getAddressSummary(address.addressIds, address.p2pkhAddressIds, address.rawAddresses)
+    let transactions = await ctx.service.address.getAddressTransactions(address.addressIds, address.rawAddresses)
     ctx.body = {
       balance: summary.balance.toString(),
       totalReceived: summary.totalReceived.toString(),
@@ -34,6 +35,7 @@ class AddressController extends Controller {
       })),
       ranking: summary.ranking,
       transactionCount: summary.transactionCount,
+      transactions: transactions.map(id => id.toString('hex')),
       blocksMined: summary.blocksMined
     }
   }
