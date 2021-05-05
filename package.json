@@ -2,7 +2,7 @@
   "name": "sbercoininfo-api",
   "private": true,
   "scripts": {
-    "start": "egg-scripts start --title=sbercoininfo-api --sticky --daemon",
+    "start": "egg-scripts start --title=sbercoininfo-api --sticky --daemon --port=7003",
     "stop": "egg-scripts stop --title=sbercoininfo-api",
     "dev": "egg-bin dev",
     "lint": "eslint --ext .js app config"
