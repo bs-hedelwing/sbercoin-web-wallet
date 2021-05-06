@@ -7,6 +7,7 @@ class AddressController extends Controller {
     let summary = await ctx.service.address.getAddressSummary(address.addressIds, address.p2pkhAddressIds, address.rawAddresses)
     let {totalCount, transactions} = await ctx.service.address.getAddressTransactions(address.addressIds, address.rawAddresses)
     ctx.body = {
+      addrStr: summary.address,
       balance: summary.balance.toString(),
       coinBalance: (Number.parseInt(summary.balance)/1e7).toString(),
       totalReceived: summary.totalReceived.toString(),
