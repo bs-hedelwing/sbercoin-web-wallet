@@ -49,7 +49,7 @@ exports.sequelize = {
   host: 'localhost',
   port: 3306,
   username: 'root',
-  password: 'explorer'
+  password: '123'
 }
 
 exports.sbercoin = {
@@ -63,8 +63,8 @@ exports.sbercoininfo = {
     protocol: 'http',
     host: 'localhost',
     port: 3889,
-    user: 'exploreradmin',
-    password: 'explorer'
+    user: 'user',
+    password: 'password'
   }
 }
 

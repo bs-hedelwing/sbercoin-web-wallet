@@ -34,7 +34,7 @@ module.exports = app => {
 
   router.get(
     '/address/:address',
-    addressMiddleware,
+    addressMiddleware, paginationMiddleware, blockFilterMiddleware,
     controller.address.summary
   )
   router.get(

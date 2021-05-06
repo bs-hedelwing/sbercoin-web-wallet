@@ -16,7 +16,7 @@ class AddressService extends Service {
       qrc721Balances,
       ranking,
       transactionCount,
-      transactions,
+      //transactions,
       blocksMined,
     ] = await Promise.all([
       balanceService.getTotalBalanceChanges(addressIds),
@@ -27,7 +27,7 @@ class AddressService extends Service {
       qrc721Service.getAllQRC721Balances(hexAddresses),
       balanceService.getBalanceRanking(addressIds),
       this.getAddressTransactionCount(addressIds, rawAddresses),
-      this.getAddressTransactions(addressIds, rawAddresses),
+      //this.getAddressTransactions(addressIds, rawAddresses),
       Block.count({where: {minerId: {[$in]: p2pkhAddressIds}, height: {[$gt]: 0}}, transaction: this.ctx.state.transaction}),
     ])
     return {
@@ -41,7 +41,7 @@ class AddressService extends Service {
       qrc721Balances,
       ranking,
       transactionCount,
-      transactions,
+      //transactions,
       blocksMined
     }
   }
