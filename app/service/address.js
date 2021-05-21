@@ -27,18 +27,9 @@ class AddressService extends Service {
       qrc721Service.getAllQRC721Balances(hexAddresses),
       balanceService.getBalanceRanking(addressIds),
       this.getAddressTransactionCount(addressIds, rawAddresses),
-      //this.getAddressTransactions(addressIds, rawAddresses),
       Block.count({where: {minerId: {[$in]: p2pkhAddressIds}, height: {[$gt]: 0}}, transaction: this.ctx.state.transaction}),
     ])
-    const db = this.ctx.model
-    const {sql} = this.ctx.helper
-    let addressStr = (await db.query(sql`
-        SELECT string
-        FROM address
-        WHERE _id = ${addressIds[0]}
-      `))[0][0].string
     return {
-      address: addressStr,
       balance: totalReceived - totalSent,
       totalReceived,
       totalSent,
@@ -49,7 +40,6 @@ class AddressService extends Service {
       qrc721Balances,
       ranking,
       transactionCount,
-      //transactions,
       blocksMined
     }
   }

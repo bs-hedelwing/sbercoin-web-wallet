@@ -2,12 +2,13 @@
   "name": "sbercoininfo-api",
   "private": true,
   "scripts": {
-    "start": "egg-scripts start --title=sbercoininfo-api --sticky --daemon --port=7003",
+    "start": "egg-scripts start --title=sbercoininfo-api --sticky --daemon --port=7001",
     "stop": "egg-scripts stop --title=sbercoininfo-api",
     "dev": "egg-bin dev",
     "lint": "eslint --ext .js app config"
   },
   "dependencies": {
+    "Sweb3": "https://github.com/SbercoinCom/sweb3.js.git#master",
     "egg": "^2.23.0",
     "egg-cors": "^2.2.0",
     "egg-redis": "^2.4.0",

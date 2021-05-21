@@ -1,4 +1,5 @@
 const {Controller} = require('egg')
+const {Decoder} = require('Sweb3')
 
 class AddressController extends Controller {
   async summary() {
@@ -6,8 +7,14 @@ class AddressController extends Controller {
     let {address} = ctx.state
     let summary = await ctx.service.address.getAddressSummary(address.addressIds, address.p2pkhAddressIds, address.rawAddresses)
     let {totalCount, transactions} = await ctx.service.address.getAddressTransactions(address.addressIds, address.rawAddresses)
+    let hexAddress = ''
+    JSON.parse(JSON.stringify(address.rawAddresses[0].data)).data.forEach(byte => {
+      byte.toString(16).length == 1 ? hexAddress += '0' + byte.toString(16) : hexAddress += byte.toString(16)
+    })
+
     ctx.body = {
-      addrStr: summary.address,
+      addrStr: Decoder.toSbercoinAddress(hexAddress, true),
+      hexAddress: hexAddress,
       balance: summary.balance.toString(),
       coinBalance: (Number.parseInt(summary.balance)/1e7).toString(),
       totalReceived: summary.totalReceived.toString(),
@@ -246,7 +253,7 @@ class AddressController extends Controller {
       outputIndex: utxo.outputIndex,
       scriptPubKey: utxo.scriptPubKey.toString('hex'),
       address: utxo.address,
-      value: utxo.value.toString(),
+      value: parseInt(utxo.value.toString()),
       isStake: utxo.isStake,
       blockHeight: utxo.blockHeight,
       confirmations: utxo.confirmations
