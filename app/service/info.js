@@ -4,7 +4,7 @@ class InfoService extends Service {
   async getInfo() {
     let height = this.app.blockchainInfo.tip.height
     let stakeWeight = JSON.parse(await this.app.redis.hget(this.app.name, 'stakeweight')) || 0
-    let feeRate = JSON.parse(await this.app.redis.hget(this.app.name, 'feerate')).find(item => item.blocks === 10).feeRate || 0.004
+    let feeRate = JSON.parse(await this.app.redis.hget(this.app.name, 'feerate')).find(item => item.blocks === 10).feeRate || 0.0001
     let dgpInfo = JSON.parse(await this.app.redis.hget(this.app.name, 'dgpinfo')) || {}
     return {
       height,
@@ -70,12 +70,12 @@ class InfoService extends Service {
     let client = new this.app.sbercoininfo.rpc(this.app.config.sbercoininfo.rpc)
     let results = await Promise.all([2, 4, 6, 10, 12, 24].map(blocks => client.estimatesmartfee(blocks)))
     return [
-      {blocks: 2, feeRate: results[0].feerate || 0.004},
-      {blocks: 4, feeRate: results[1].feerate || 0.004},
-      {blocks: 6, feeRate: results[2].feerate || 0.004},
-      {blocks: 10, feeRate: results[3].feerate || 0.004},
-      {blocks: 12, feeRate: results[4].feerate || 0.004},
-      {blocks: 24, feeRate: results[5].feerate || 0.004}
+      {blocks: 2, feeRate: results[0].feerate || 0.0001},
+      {blocks: 4, feeRate: results[1].feerate || 0.0001},
+      {blocks: 6, feeRate: results[2].feerate || 0.0001},
+      {blocks: 10, feeRate: results[3].feerate || 0.0001},
+      {blocks: 12, feeRate: results[4].feerate || 0.0001},
+      {blocks: 24, feeRate: results[5].feerate || 0.0001}
     ]
   }
 

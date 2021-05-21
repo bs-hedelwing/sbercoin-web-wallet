@@ -15,8 +15,9 @@ class AddressService extends Service {
       qrc20Balances,
       qrc721Balances,
       ranking,
+      transactionCount,
+      //transactions,
       blocksMined,
-      transactionCount
     ] = await Promise.all([
       balanceService.getTotalBalanceChanges(addressIds),
       balanceService.getUnconfirmedBalance(addressIds),
@@ -25,8 +26,8 @@ class AddressService extends Service {
       qrc20Service.getAllQRC20Balances(hexAddresses),
       qrc721Service.getAllQRC721Balances(hexAddresses),
       balanceService.getBalanceRanking(addressIds),
-      Block.count({where: {minerId: {[$in]: p2pkhAddressIds}, height: {[$gt]: 0}}, transaction: this.ctx.state.transaction}),
       this.getAddressTransactionCount(addressIds, rawAddresses),
+      Block.count({where: {minerId: {[$in]: p2pkhAddressIds}, height: {[$gt]: 0}}, transaction: this.ctx.state.transaction}),
     ])
     return {
       balance: totalReceived - totalSent,

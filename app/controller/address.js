@@ -1,14 +1,26 @@
 const {Controller} = require('egg')
+const {Decoder} = require('Sweb3')
 
 class AddressController extends Controller {
   async summary() {
     let {ctx} = this
     let {address} = ctx.state
     let summary = await ctx.service.address.getAddressSummary(address.addressIds, address.p2pkhAddressIds, address.rawAddresses)
+    let {totalCount, transactions} = await ctx.service.address.getAddressTransactions(address.addressIds, address.rawAddresses)
+    let hexAddress = ''
+    JSON.parse(JSON.stringify(address.rawAddresses[0].data)).data.forEach(byte => {
+      byte.toString(16).length == 1 ? hexAddress += '0' + byte.toString(16) : hexAddress += byte.toString(16)
+    })
     ctx.body = {
+      addrStr: Decoder.toSbercoinAddress(hexAddress, true),
+      hexAddress: hexAddress,
+      hexAddress: hexAddress,
       balance: summary.balance.toString(),
+      coinBalance: (Number.parseInt(summary.balance)/1e7).toString(),
       totalReceived: summary.totalReceived.toString(),
+      totalCoinReceived: (Number.parseInt(summary.totalReceived)/1e7).toString(),
       totalSent: summary.totalSent.toString(),
+      totalCoinSent: (Number.parseInt(summary.totalSent)/1e7).toString(),
       unconfirmed: summary.unconfirmed.toString(),
       staking: summary.staking.toString(),
       mature: summary.mature.toString(),
@@ -33,7 +45,8 @@ class AddressController extends Controller {
         count: item.count
       })),
       ranking: summary.ranking,
-      transactionCount: summary.transactionCount,
+      totalCount,
+      transactions: transactions.map(id => id.toString('hex')),
       blocksMined: summary.blocksMined
     }
   }
@@ -240,7 +253,7 @@ class AddressController extends Controller {
       outputIndex: utxo.outputIndex,
       scriptPubKey: utxo.scriptPubKey.toString('hex'),
       address: utxo.address,
-      value: utxo.value.toString(),
+      value: parseInt(utxo.value.toString()),
       isStake: utxo.isStake,
       blockHeight: utxo.blockHeight,
       confirmations: utxo.confirmations

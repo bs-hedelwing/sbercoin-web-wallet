@@ -1,4 +1,5 @@
 const {Service} = require('egg')
+const { Encoder } = require('Sweb3')
 
 class TransactionService extends Service {
   async getTransaction(id) {
@@ -606,6 +607,39 @@ class TransactionService extends Service {
       qrc20TokenUnconfirmedTransfers,
       qrc721TokenTransfers
     }
+  }
+
+  async transformTransactionToReceipt(transaction) {
+    let outputs = transaction.outputs.map((output, index) => this.transformOutput(output, index, {brief: false}))
+    let receiptOutputIndex
+    let gasUsed
+    let log = []
+    let contractAddress
+    let sender
+
+    outputs.forEach((output, index) => {
+      if (output.receipt) {
+        receiptOutputIndex = index
+        gasUsed = output.receipt.gasUsed
+        log = output.receipt.logs
+        contractAddress = output.receipt.contractAddress
+        sender = output.receipt.sender
+      }
+    })
+    
+    return [{
+      blockHash: transaction.block && transaction.block.hash.toString('hex'),
+      blockNumber: transaction.block && transaction.block.height,
+      id: transaction.id.toString('hex'),
+      transactionHash: transaction.hash.toString('hex'),
+      from: sender ? Encoder.addressToHex(sender).substr(-40) : null,
+      to: contractAddress || null,
+      log: log || [],
+      contractAddress: contractAddress || null,
+      outputIndex: receiptOutputIndex || null,
+      gasUsed: gasUsed || null,
+      cumulativeGasUsed: gasUsed
+    }]
   }
 
   transformInput(input, index, transaction, {brief}) {
