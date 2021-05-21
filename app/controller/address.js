@@ -11,10 +11,6 @@ class AddressController extends Controller {
     JSON.parse(JSON.stringify(address.rawAddresses[0].data)).data.forEach(byte => {
       byte.toString(16).length == 1 ? hexAddress += '0' + byte.toString(16) : hexAddress += byte.toString(16)
     })
-    let hexAddress = ''
-    JSON.parse(JSON.stringify(address.rawAddresses[0].data)).data.forEach(byte => {
-      byte.toString(16).length == 1 ? hexAddress += '0' + byte.toString(16) : hexAddress += byte.toString(16)
-    })
     ctx.body = {
       addrStr: Decoder.toSbercoinAddress(hexAddress, true),
       hexAddress: hexAddress,
