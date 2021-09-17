@@ -14,7 +14,6 @@ class AddressController extends Controller {
     ctx.body = {
       addrStr: Decoder.toSbercoinAddress(hexAddress, true),
       hexAddress: hexAddress,
-      hexAddress: hexAddress,
       balance: summary.balance.toString(),
       coinBalance: (Number.parseInt(summary.balance)/1e7).toString(),
       totalReceived: summary.totalReceived.toString(),
@@ -47,7 +46,18 @@ class AddressController extends Controller {
       ranking: summary.ranking,
       totalCount,
       transactions: transactions.map(id => id.toString('hex')),
-      blocksMined: summary.blocksMined
+      blocksMined: summary.blocksMined,
+    }
+    if (summary.superstaker != null) {
+      Object.assign(ctx.body, {superStaker: Decoder.toSbercoinAddress(summary.superstaker.data.toString('hex'), true), fee: summary.superstaker.fee})
+    }
+    if (Object.keys(summary.delegators).length != 0) {
+      Object.assign(ctx.body, {
+        delegators: summary.delegators.map(item => ({
+          delegator: Decoder.toSbercoinAddress(item.data.toString('hex'), true), 
+          fee: item.fee
+        }))
+      })
     }
   }
 

@@ -17,6 +17,8 @@ class AddressService extends Service {
       ranking,
       transactionCount,
       //transactions,
+      delegators,
+      superstaker,
       blocksMined,
     ] = await Promise.all([
       balanceService.getTotalBalanceChanges(addressIds),
@@ -27,6 +29,8 @@ class AddressService extends Service {
       qrc721Service.getAllQRC721Balances(hexAddresses),
       balanceService.getBalanceRanking(addressIds),
       this.getAddressTransactionCount(addressIds, rawAddresses),
+      this.getDelegators(rawAddresses),
+      this.getSuperstaker(rawAddresses),
       Block.count({where: {minerId: {[$in]: p2pkhAddressIds}, height: {[$gt]: 0}}, transaction: this.ctx.state.transaction}),
     ])
     return {
@@ -40,8 +44,30 @@ class AddressService extends Service {
       qrc721Balances,
       ranking,
       transactionCount,
+      delegators,
+      superstaker,
       blocksMined
     }
+  }
+
+  async getDelegators(rawAddresses) {
+    const db = this.ctx.model
+    const {sql} = this.ctx.helper
+    let delegators = await db.query(sql`
+      SELECT delegator_data as data, fee FROM delegation
+      WHERE superstaker_data =  ${rawAddresses.map(address => address.data)[0]} AND is_active = 1
+    `, {type: db.QueryTypes.SELECT, transaction: this.ctx.state.transaction})
+    return delegators
+  }
+
+  async getSuperstaker(rawAddresses) {
+    const db = this.ctx.model
+    const {sql} = this.ctx.helper
+    let superstakers = await db.query(sql`
+      SELECT superstaker_data as data, fee FROM delegation
+      WHERE delegator_data =  ${rawAddresses.map(address => address.data)[0]} AND is_active = 1
+    `, {type: db.QueryTypes.SELECT, transaction: this.ctx.state.transaction})
+    return superstakers[0] || null
   }
 
   async getAddressTransactionCount(addressIds, rawAddresses) {
