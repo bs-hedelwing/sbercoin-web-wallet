@@ -44,7 +44,7 @@ class AddressController extends Controller {
         count: item.count
       })),
       ranking: summary.ranking,
-      totalCount,
+      transactionCount: totalCount,
       transactions: transactions.map(id => id.toString('hex')),
       blocksMined: summary.blocksMined,
     }
