@@ -3,7 +3,7 @@ import config from 'libs/config'
 import server from 'libs/server'
 import abi from 'ethjs-abi'
 import sbercoin from 'sbercoinjs-lib'
-import BN from 'bn.js'
+import BigNumber from 'bignumber.js'
 
 function loadTokenList(network) {
   let tokenList = tokens[network].concat(config.get(`tokenList_${network}`, []))
@@ -57,11 +57,11 @@ export default {
   },
 
   encodeSendData(token, address, amount) {
-    let _amount = new BN(amount, 10)
-    let _decimals = new BN(token.decimals, 10)
-    let ten = new BN(10, 10)
-    let multiplicator = ten.pow(_decimals)
-    let _res = _amount.mul(multiplicator)
-    return 'a9059cbb' + abi.encodeParams(['address', 'uint256'], ['0x' + sbercoin.address.fromBase58Check(address)['hash'].toString('hex'), _res.toString(16)]).substr(2)
+    const _res = new BigNumber(amount).times(Math.pow(10, token.decimals))
+
+    return 'a9059cbb' + abi.encodeParams(
+      ['address', 'uint256'],
+      ['0x' + sbercoin.address.fromBase58Check(address)['hash'].toString('hex'), _res.toString(16)]
+    ).substr(2)
   }
 }
