@@ -12,11 +12,11 @@ switch (config.getNetwork()) {
     domain = 'https://testnet.qtum.info'
     insightDomain = 'https://testnet.qtum.org'
     break
-    case 'mainnet':
-      domain = 'https://explorer.sbercoin.com'
-      insightDomain = 'https://explorer.sbercoin.com/api/'
-      expDomain = 'https://explorer.sbercoin.com'
-      break
+  case 'mainnet':
+    domain = 'https://explorer.sbercoin.com'
+    insightDomain = 'https://explorer.sbercoin.com/api/'
+    expDomain = 'https://explorer.sbercoin.com'
+    break
 }
 const apiPrefix = domain + '/api'
 
@@ -84,5 +84,24 @@ export default {
 
   async getSbercoinInfo() {
     return await _get(`/info`)
+  },
+
+  async getAddressHistory(address) {
+    try {
+      return await _get(`/address/${address}/history`)
+    } catch (e) {
+      return {
+        successedTransactions: [],
+        failedTransactions: []
+      }
+    }
+  },
+
+  async postAddressHistory(address, pos, value, transaction, error) {
+    try {
+      return await _post(`/address/${address}/history`, { pos, value, transaction, error })
+    } catch (e) {
+      return true
+    }
   }
 }
