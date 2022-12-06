@@ -205,7 +205,7 @@ export default class Wallet {
       }
     }
 
-    const { failedTransactions } = await sbercoinInfo.getAddressHistory()
+    const { failedTransactions } = await sbercoinInfo.getAddressHistory(wallet.info.address)
 
     console.log(failedTransactions)
 
