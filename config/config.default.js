@@ -11,7 +11,7 @@ const redisConfig = {
 exports.keys = 'sbercoininfo-api'
 
 exports.security = {
-  csrf: {enable: false}
+  csrf: { enable: false }
 }
 
 exports.middleware = ['ratelimit']
@@ -39,7 +39,7 @@ exports.io = {
     key: 'sbercoininfo-api-socket.io'
   },
   namespace: {
-    '/': {connectionMiddleware: ['connection']}
+    '/': { connectionMiddleware: ['connection'] }
   }
 }
 
@@ -69,4 +69,4 @@ exports.sbercoininfo = {
 }
 
 exports.cmcAPIKey = null
-exports.cors = {origin:'*'}
+exports.cors = { origin: '*' }
