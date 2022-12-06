@@ -5,6 +5,9 @@ module.exports = app => {
   const contractMiddleware = middleware.contract()
   const paginationMiddleware = middleware.pagination()
 
+  router.get('/address/:address/history', addressMiddleware, controller.address.getHistory)
+  router.post('/address/:address/history', addressMiddleware, controller.address.addInHistory)
+
   router.get('/info', controller.info.index)
   router.get('/supply', controller.info.supply)
   router.get('/total-max-supply', controller.info.totalMaxSupply)

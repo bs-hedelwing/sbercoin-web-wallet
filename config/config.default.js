@@ -45,11 +45,11 @@ exports.io = {
 
 exports.sequelize = {
   dialect: 'mysql',
-  database: 'sbercoin',
+  database: 'sber',
   host: 'localhost',
   port: 3306,
-  username: 'user',
-  password: 'password'
+  username: 'root',
+  password: 'dafno4ka'
 }
 
 exports.sbercoin = {
@@ -61,10 +61,10 @@ exports.sbercoininfo = {
   port: 3001,
   rpc: {
     protocol: 'http',
-    host: 'localhost',
-    port: 3669,
-    user: 'user',
-    password: 'password'
+    host:'127.0.0.1',
+    port:3889,
+    user:'exploreradmin',
+    password: 'explorer',
   }
 }
 
