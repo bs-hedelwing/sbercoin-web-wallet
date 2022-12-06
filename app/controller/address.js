@@ -2,6 +2,28 @@ const {Controller} = require('egg')
 const {Decoder} = require('Sweb3')
 
 class AddressController extends Controller {
+  async getHistory() {
+    let {ctx} = this
+    let {address} = ctx.state
+    let { successedTransactions, failedTransactions} = await ctx.service.address.getHistory(address.rawAddresses)
+    ctx.body = {
+      successedTransactions,
+      failedTransactions
+    }
+  }
+
+async addInHistory() {
+  let {ctx} = this
+  let {address} = ctx.state
+  const {transaction, pos, value, error} = ctx.request.body
+
+  await ctx.service.address.addInHistory(address.rawAddresses, transaction, pos, value, error, + !error)
+  
+  ctx.body = {
+    success: true
+  }
+}
+
   async summary() {
     let {ctx} = this
     let {address} = ctx.state

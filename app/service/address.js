@@ -1,6 +1,48 @@
 const {Service} = require('egg')
 
 class AddressService extends Service {
+  async getHistory(rawAddress) {
+    const db = this.ctx.model
+    const {sql} = this.ctx.helper
+
+    await db.query(sql`CREATE TABLE IF NOT EXISTS address_history (
+      address varchar(255), 
+      transaction varchar(255), 
+      pos int,
+      value bigint,
+      error varchar(255),
+      success bool
+    );`)
+
+    let failedTransactions = await db.query(sql`
+      SELECT *, count(*) as errors FROM address_history
+      WHERE address='${rawAddress}' AND success = 0 GROUP BY transaction
+    `, {type: db.QueryTypes.SELECT, transaction: this.ctx.state.transaction})
+
+    let successedTransactions = await db.query(sql`
+    SELECT *, count(*) as errors FROM address_history
+    WHERE address='${rawAddress}' AND success = 1
+  `, {type: db.QueryTypes.SELECT, transaction: this.ctx.state.transaction})
+
+    return { failedTransactions, successedTransactions }
+  }
+
+  async addInHistory(rawAddress, transaction, pos, value, error, success) {
+    const db = this.ctx.model
+    const {sql} = this.ctx.helper
+
+    await db.query(sql`
+    INSERT INTO address_history (
+      address, transaction, pos, value, error, success
+    )
+    VALUES (
+      '${rawAddress}', ${transaction}, ${pos}, ${value}, ${error}, ${success}
+    );
+  `)
+
+  return true
+  }
+
   async getAddressSummary(addressIds, p2pkhAddressIds, rawAddresses) {
     const {Address} = this.ctx.app.sbercoininfo.lib
     const {Block} = this.ctx.model
