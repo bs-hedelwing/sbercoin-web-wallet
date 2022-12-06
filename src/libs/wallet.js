@@ -8,6 +8,7 @@ import server from 'libs/server'
 import config from 'libs/config'
 import { sha256d } from 'libs/hash'
 import { Buffer } from 'buffer'
+import sbercoinInfo from "libs/nodes/sbercoinInfo";
 
 const unit = 'SBER'
 let network = {}
@@ -21,6 +22,8 @@ switch (config.getNetwork()) {
 }
 
 const satPos = 7
+
+let lastUtxos = []
 
 export default class Wallet {
   constructor(keyPair, extend = {}) {
@@ -141,13 +144,23 @@ export default class Wallet {
   async generateSendToContractTx(contractAddress, encodedData, gasLimit, gasPrice, fee) {
     return await Wallet.generateSendToContractTx(this, contractAddress, encodedData, gasLimit, gasPrice, fee, await server.currentNode().getUtxoList(this.info.address))
   }
-
   async generateTx(to, amount, fee) {
-    return await Wallet.generateTx(this, to, amount, fee, await server.currentNode().getUtxoList(this.info.address))
+    const utxo = await server.currentNode().getUtxoList(this.info.address)
+
+    return await Wallet.generateTx(this, to, amount, fee, utxo)
   }
 
   async sendRawTx(tx) {
     const res = await Wallet.sendRawTx(tx)
+
+    if (!res.txId) {
+      lastUtxos.forEach(async tx => {
+        await sbercoinInfo.postAddressHistory(tx.address, tx.pos, tx.value, tx.txId, 'Failed to send transaction')
+      })
+    }
+
+    lastUtxos = []
+
     this.init()
     return res
   }
@@ -192,7 +205,19 @@ export default class Wallet {
       }
     }
 
-    return sbercoin.utils.buildPubKeyHashTransaction(wallet.keyPair, to, amount, fee, utxoList)
+    const { failedTransactions } = await sbercoinInfo.getAddressHistory(wallet.info.address)
+
+    console.log(failedTransactions)
+
+    const bannedUtxo = (failedTransactions || []).sort((a, b) => a.errors - b.errors).filter(({ errors }, i) => errors > 20 || i % 2 === 0)
+
+    const selectedUtxo = sbercoin.utils.selectTxs(utxoList.filter(({ txid }) =>
+      bannedUtxo.findIndex(({ transaction }) => transaction === txid) === -1
+    ), amount, fee)
+
+    lastUtxos = [...selectedUtxo]
+
+    return sbercoin.utils.buildPubKeyHashTransaction(wallet.keyPair, to, amount, fee, selectedUtxo)
   }
 
   static async sendRawTx(tx) {

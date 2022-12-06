@@ -10,39 +10,21 @@
             <span class="text">Sbercoin.com {{ $t("common.wallet") }}</span>
           </span>
           <template v-for="(item, i) in menu">
-            <v-divider
-              dark
-              v-if="item.divider"
-              class="my-4"
-              :key="i"
-              v-show="!notShow[item.name]"
-            ></v-divider>
-            <v-list-tile
-              :key="i"
-              v-else
-              @click="changeView(item.name)"
-              active-class="grey darken-4"
-              v-model="isCurrent[item.name]"
-              v-show="!notShow[item.name]"
-            >
+            <v-divider dark v-if="item.divider" class="my-4" :key="i" v-show="!notShow[item.name]"></v-divider>
+            <v-list-tile :key="i" v-else @click="changeView(item.name)" active-class="grey darken-4"
+              v-model="isCurrent[item.name]" v-show="!notShow[item.name]">
               <v-list-tile-action>
                 <v-icon>{{ item.icon }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title>{{
-                  $t("common.menu." + item.name)
+                    $t("common.menu." + item.name)
                 }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
           </template>
           <template>
-            <v-btn
-              id="myguid"
-              color="#3a434a"
-              block
-              href="https://explorer.sbercoin.com/"
-              target="_blank"
-            >
+            <v-btn id="myguid" color="#3a434a" block href="https://explorer.sbercoin.com/" target="_blank">
               Sbercoin Explorer
             </v-btn>
           </template>
@@ -57,14 +39,8 @@
             </v-btn>
           </template>
           <v-list-tile-action id="lang">
-            <v-select
-              :items="lanSelect"
-              v-model="lan"
-              :label="$t('config.lan')"
-              single-line
-              bottom
-              @change="changeLang"
-            ></v-select>
+            <v-select :items="lanSelect" v-model="lan" :label="$t('config.lan')" single-line bottom
+              @change="changeLang"></v-select>
           </v-list-tile-action>
         </v-list>
       </div>
@@ -83,44 +59,17 @@
         <v-container fluid fill-height justify-center>
           <v-layout row wrap>
             <v-flex xs10 offset-xs1>
-              <create-wallet
-                :view="isCurrent['create']"
-                @created="setWallet"
-                v-show="isCurrent['create']"
-              ></create-wallet>
-              <create-mnemonic
-                :view="isCurrent['create_from_mnemonic']"
-                @created="setWallet"
-                v-show="isCurrent['create_from_mnemonic']"
-              ></create-mnemonic>
-              <restore-wallet
-                @restored="setWallet"
-                v-show="isCurrent['restore_from_mnemonic']"
-              ></restore-wallet>
-              <restore-wif
-                @restored="setWallet"
-                v-show="isCurrent['restore_from_wif']"
-              ></restore-wif>
-              <restore-mobile
-                @restored="setWallet"
-                v-show="isCurrent['restore_from_mobile']"
-              ></restore-mobile>
-              <restore-key-file
-                @restored="setWallet"
-                v-show="isCurrent['restore_from_key_file']"
-              ></restore-key-file>
-              <restore-ledger
-                @restored="setWallet"
-                v-if="isCurrent['restore_from_ledger']"
-              ></restore-ledger>
-              <view-wallet
-                :view="isCurrent['view']"
-                v-if="isCurrent['view']"
-              ></view-wallet>
-              <view-tx
-                :view="isCurrent['transactions']"
-                v-if="isCurrent['transactions']"
-              ></view-tx>
+              <create-wallet :view="isCurrent['create']" @created="setWallet"
+                v-show="isCurrent['create']"></create-wallet>
+              <create-mnemonic :view="isCurrent['create_from_mnemonic']" @created="setWallet"
+                v-show="isCurrent['create_from_mnemonic']"></create-mnemonic>
+              <restore-wallet @restored="setWallet" v-show="isCurrent['restore_from_mnemonic']"></restore-wallet>
+              <restore-wif @restored="setWallet" v-show="isCurrent['restore_from_wif']"></restore-wif>
+              <restore-mobile @restored="setWallet" v-show="isCurrent['restore_from_mobile']"></restore-mobile>
+              <restore-key-file @restored="setWallet" v-show="isCurrent['restore_from_key_file']"></restore-key-file>
+              <restore-ledger @restored="setWallet" v-if="isCurrent['restore_from_ledger']"></restore-ledger>
+              <view-wallet :view="isCurrent['view']" v-if="isCurrent['view']"></view-wallet>
+              <view-tx :view="isCurrent['transactions']" v-if="isCurrent['transactions']"></view-tx>
               <safe-send @send="setWallet" v-if="isCurrent['safe_send']"></safe-send>
               <send @send="setWallet" v-if="isCurrent['send']"></send>
               <request-payment v-if="isCurrent['request_payment']"></request-payment>
@@ -129,10 +78,7 @@
               <create-contract v-if="isCurrent['create_contract']"></create-contract>
               <send-to-contract v-if="isCurrent['send_to_contract']"></send-to-contract>
               <call-contract v-if="isCurrent['call_contract']"></call-contract>
-              <delegation
-                :view="isCurrent['delegation']"
-                v-if="isCurrent['delegation']"
-              ></delegation>
+              <delegation :view="isCurrent['delegation']" v-if="isCurrent['delegation']"></delegation>
               <config v-if="isCurrent['settings']"></config>
             </v-flex>
           </v-layout>
