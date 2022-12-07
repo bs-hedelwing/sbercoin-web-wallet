@@ -220,24 +220,25 @@ export default {
       this.sending = true
       try {
         const res = await webWallet.getWallet().sendRawTx(this.rawTx)
-        /*         this.confirmSendDialog = false
-                this.sending = false */
+        this.confirmSendDialog = false
+        this.sending = false
         if (res.txId) {
-          this.confirmSendDialog = false
-          this.sending = false
-          
+          await webWallet.getWallet().logTx(true)
+
           const txViewUrl = server.currentNode().getTxExplorerUrl(res.txId)
           this.$root.success(this.$t('warning.successfull_send_you_can_view_tx', { n: txViewUrl }), true, 0)
 
           track.trackAction('done', 'send', this.symbol)
           this.$emit('send')
         } else {
+          await webWallet.getWallet().logTx(false)
+
           this.$root.error(this.$t('warning.send_failed', { n: res.message }), true, 0)
           await this.generateTx()
           this.confirmSend()
         }
-        /*         track.trackAction('done', 'send', this.symbol)
-                this.$emit('send') */
+        track.trackAction('done', 'send', this.symbol)
+        this.$emit('send')
       } catch (e) {
         alert(e.message || e)
         this.$root.log.error('send_post_raw_tx_error', e.response || e.stack || e.toString() || e)

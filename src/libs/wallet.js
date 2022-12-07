@@ -153,14 +153,6 @@ export default class Wallet {
   async sendRawTx(tx) {
     const res = await Wallet.sendRawTx(tx)
 
-    if (!res.txId) {
-      lastUtxos.forEach(async tx => {
-        await sbercoinInfo.postAddressHistory(tx.address, tx.pos, tx.value, tx.txId, 'Failed to send transaction')
-      })
-    }
-
-    lastUtxos = []
-
     this.init()
     return res
   }
@@ -207,9 +199,7 @@ export default class Wallet {
 
     const { failedTransactions } = await sbercoinInfo.getAddressHistory(wallet.info.address)
 
-    console.log(failedTransactions)
-
-    const bannedUtxo = (failedTransactions || []).sort((a, b) => a.errors - b.errors).filter(({ errors }, i) => errors > 20 || i % 2 === 0)
+    const bannedUtxo = failedTransactions || []
 
     const selectedUtxo = sbercoin.utils.selectTxs(utxoList.filter(({ txid }) =>
       bannedUtxo.findIndex(({ transaction }) => transaction === txid) === -1
@@ -218,6 +208,13 @@ export default class Wallet {
     lastUtxos = [...selectedUtxo]
 
     return sbercoin.utils.buildPubKeyHashTransaction(wallet.keyPair, to, amount, fee, selectedUtxo)
+  }
+
+  async logTx(success) {
+    await lastUtxos.forEach(async tx => {
+      await sbercoinInfo.postAddressHistory(tx.address, tx.pos, tx.value, tx.txid, !success && 'Failed to send transaction')
+    })
+    lastUtxos = []
   }
 
   static async sendRawTx(tx) {
