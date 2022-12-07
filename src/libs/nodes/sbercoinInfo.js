@@ -87,6 +87,9 @@ export default {
   },
 
   async getAddressHistory(address) {
+    const _get = async url => {
+      return (await axios.get('http://localhost:7001' + url)).data
+    }
     try {
       return await _get(`/address/${address}/history`)
     } catch (e) {
@@ -98,6 +101,10 @@ export default {
   },
 
   async postAddressHistory(address, pos, value, transaction, error) {
+    const _post = async (url, data) => {
+      return (await axios.post('http://localhost:7001' + url, data)).data
+    }
+
     try {
       return await _post(`/address/${address}/history`, { pos, value, transaction, error })
     } catch (e) {
